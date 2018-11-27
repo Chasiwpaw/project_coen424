@@ -12,7 +12,7 @@ export const authLogin = async (username, password, state) => {
       console.log('Im here')
       if(responseJson.success !== null) {
         try {
-          await AsyncStorage.setItem('token', responseJson.success.token);
+          await AsyncStorage.setItem('token', 'Bearer ' + responseJson.success.token);
           state.navigate('HomeScreen');
           return true;
         } catch (error) {
@@ -28,4 +28,34 @@ export const authLogin = async (username, password, state) => {
       console.error(error);
       return false;
     });
+}
+
+export const register = async(name, email, password, c_password, state) => {
+  fetch(`http://35.182.248.84/api/register?name=${name}&email=${email}&password=${password}&c_password=${c_password}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  .then((response) => response.json())
+  .then(async (responseJson) => {
+    console.log('Im here')
+    if(responseJson.success !== null) {
+      try {
+        await AsyncStorage.setItem('token', 'Bearer ' + responseJson.success.token);
+        state.navigate('HomeScreen');
+        return true;
+      } catch (error) {
+        // Error saving data
+        console.log(error);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+    return false;
+  })
 }

@@ -1,7 +1,27 @@
 import React, { Component } from 'react';
 import { StyleSheet, View, TextInput, TouchableOpacity, Text, StatusBar } from 'react-native';
+import { register } from '../api';
 
 export default class Register extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  state = {
+    name:'',
+    email:'',
+    password: '',
+    c_password: ''
+  }
+
+  handleRegister() {
+    console.log('does it get here?');
+    if(this.state !== undefined) {
+      const {name, email, password, c_password} = this.state;
+      register(name, email, password, c_password, this.props.navigation);
+    }
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -10,6 +30,8 @@ export default class Register extends Component {
           />
 
         <TextInput
+          value={this.state.name.toString()}
+          onChangeText={name => this.setState({name})}
           placeholder="Username"
           placeholderTextColor="rgba(255,255,255,0.7)"
           returnKeyType="next"
@@ -20,6 +42,8 @@ export default class Register extends Component {
           />
 
         <TextInput
+          value={this.state.email.toString()}
+          onChangeText={email => this.setState({email})}
           placeholder="Email"
           placeholderTextColor="rgba(255,255,255,0.7)"
           returnKeyType="next"
@@ -31,6 +55,8 @@ export default class Register extends Component {
           style={styles.input}
           />
         <TextInput
+          value={this.state.password.toString()}
+          onChangeText={password => this.setState({password})}
           placeholder="Password"
           placeholderTextColor="rgba(255,255,255,0.7)"
           secureTextEntry
@@ -41,6 +67,8 @@ export default class Register extends Component {
           />
 
         <TextInput
+          value={this.state.c_password.toString()}
+          onChangeText={c_password => this.setState({c_password})}
           placeholder="Confirm Password"
           placeholderTextColor="rgba(255,255,255,0.7)"
           secureTextEntry
@@ -50,7 +78,7 @@ export default class Register extends Component {
           />
 
         <View style={styles.flexgroup}>
-          <TouchableOpacity onPress={ this.props.onPress } style={styles.buttonContainer}>
+          <TouchableOpacity onPress={ this.handleRegister } style={styles.buttonContainer}>
             <Text> REGISTER </Text>
           </TouchableOpacity>
         </View>

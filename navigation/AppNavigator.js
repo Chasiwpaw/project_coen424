@@ -1,9 +1,9 @@
-import { createStackNavigator } from 'react-navigation';
+import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import Home from '../screens/Home';
 
-const AppNavigator = createStackNavigator({
+const LoginScreen = createStackNavigator({
   LoginScreen: { 
     screen: Login,
     navigationOptions: {
@@ -17,12 +17,41 @@ const AppNavigator = createStackNavigator({
       headerTransparent: true,
     },
   },
-  HomeScreen: { 
-    screen: Home,
+  HomeScreen: {
+    screen: createDrawerNavigator({
+      Home :{
+        screen: Home,
+      },
+      Profile: {
+        screen: Home,
+      },
+      Logout: {
+        screen: Login,
+      }
+    }, {
+      disableGestures: true,
+      drawerLockMode: 'locked-closed'
+    }),
     navigationOptions: {
-      headerLeft: null,
-    }
+      header: null,
+      disabledBackGesture: true,
+      gesturesEnabled: false,
+    },
   }
+});
+
+const AppNavigator = createStackNavigator({
+  login: {
+    screen: LoginScreen,
+    navigationOptions: {
+      gesturesEnabled: false,
+    }
+  },
+}, {
+  headerMode: 'none',
+  initialRouteName: 'login',
+  drawerLockMode: 'locked-closed',
+  swipeEnabled: false,
 });
 
 export default AppNavigator;
