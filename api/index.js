@@ -59,3 +59,68 @@ export const register = async(name, email, password, c_password, state) => {
     return false;
   })
 }
+
+export const profile = async(token) => {
+  fetch('http://35.182.248.84/api/me', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': token,
+    },
+  })
+  .then((response) => response.json())
+  .then(async (responseJson) => {
+    console.log('Im here')
+    if(responseJson.success !== null) {
+      try {
+        // await AsyncStorage.setItem('token', 'Bearer ' + responseJson.success.token);
+        // state.navigate('HomeScreen');
+        console.log(responseJson.success);
+        return true;
+      } catch (error) {
+        // Error saving data
+        console.log(error);
+        return false;
+      }
+    } else {
+      return false;
+    }
+  })
+  .catch((error) => {
+    console.error(error);
+    return false;
+  })
+}
+
+export const listRestaurants = async(position, radius, limit) => {
+  const { latitude, longitude } = position.coords;
+  fetch(`http://35.182.248.84/api/places?latitude=${latitude}&longitude=${longitude}&radius=${radius}&term=Restaurant&limit=${limit}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': await AsyncStorage.getItem('token'),
+    },
+  })
+  .then((response) => response.json())
+  .then(async (responseJson) => {
+    console.log('Does it get here?')
+    // console.log(responseJson)
+    return responseJson;
+    // if(responseJson.success !== null) {
+    //   try {
+    //     console.log('this is called')
+    //     return responseJson;
+    //   } catch (error) {
+    //     // Error saving data
+    //     console.log(error);
+    //     return false;
+    //   }
+    // } else {
+    //   return false;
+    // }
+  })
+  .catch((error) => {
+    console.error(error);
+    return false;
+  })
+}

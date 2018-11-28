@@ -1,10 +1,74 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, Image } from 'react-native';
 import { Container, Content, Title, Header, Left, Body, Right, Icon, Item, Input, Card, CardItem } from 'native-base';
 import Swiper from 'react-native-swiper';
 import RecommendationItem from '../components/RecommendationItem';
+import { AsyncStorage } from 'react-native';
+// import { listRestaurants } from '../api';
 
 export default class Home extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      error: null,
+      restos: null,
+    };
+
+    this.populateRestaurants = this.populateRestaurants.bind(this);
+    this.listRestaurants = this.listRestaurants.bind(this);
+  }
+
+  listRestaurants = async(position, radius, limit) => {
+    const { latitude, longitude } = position.coords;
+    fetch(`http://35.182.248.84/api/places?latitude=${latitude}&longitude=${longitude}&radius=${radius}&term=Restaurant&limit=${limit}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': await AsyncStorage.getItem('token'),
+      },
+    })
+    .then((response) => response.json())
+    .then(async (responseJson) => {
+      console.log('Does it get here?')
+      return this.setState({restos: responseJson});
+    })
+    .catch((error) => {
+      console.error(error);
+      return false;
+    })
+  }
+
+  componentDidMount() {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        this.listRestaurants(position, '', '');
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    );
+  }
+  
+  populateRestaurants() {
+    console.log('hello')
+    if(this.state.restos !== null) {
+      console.log('im inside!')
+      return this.state.restos.businesses.map(resto => {
+        return (
+          <RecommendationItem
+            key={resto.id}
+            imageUri={resto.image_url}
+            itemName={resto.name}
+            itemPrice={resto.price}
+            itemRating={resto.rating}
+          />
+        )
+      })
+    } else {
+      return;
+    }
+  }
+
   render() {
     return (
       <Container>
@@ -70,12 +134,15 @@ export default class Home extends Component {
               <Text>Your Recommendations</Text>
             </CardItem>
 
-            <RecommendationItem
+            {
+              /* <RecommendationItem
               imageUri={require('../assets/images/bigimage5.jpg')}
               itemName="blablabla"
               itemPrice="$-$$"
               itemRating={4}
-              />
+              /> */
+              this.populateRestaurants()
+            }
           </Card>
         </Content>
       </Container>

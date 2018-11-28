@@ -10,7 +10,7 @@ export default class RecommendationCardItem extends Component {
         <View>
           <Image
             style={styles.viewImage}
-            source={this.props.imageUri}
+            source={{uri: this.props.imageUri}}
             />
         </View>
         <Right style={styles.right}>
