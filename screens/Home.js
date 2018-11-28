@@ -30,7 +30,6 @@ export default class Home extends Component {
     })
     .then((response) => response.json())
     .then(async (responseJson) => {
-      console.log('Does it get here?')
       return this.setState({restos: responseJson});
     })
     .catch((error) => {
@@ -48,11 +47,9 @@ export default class Home extends Component {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
     );
   }
-  
+
   populateRestaurants() {
-    console.log('hello')
     if(this.state.restos !== null) {
-      console.log('im inside!')
       return this.state.restos.businesses.map(resto => {
         return (
           <RecommendationItem
@@ -130,17 +127,11 @@ export default class Home extends Component {
           </Swiper>
 
           <Card>
-            <CardItem header>
+            <CardItem header style={styles.cardHeader}>
               <Text>Your Recommendations</Text>
             </CardItem>
 
             {
-              /* <RecommendationItem
-              imageUri={require('../assets/images/bigimage5.jpg')}
-              itemName="blablabla"
-              itemPrice="$-$$"
-              itemRating={4}
-              /> */
               this.populateRestaurants()
             }
           </Card>
@@ -210,7 +201,7 @@ const styles = StyleSheet.create({
   },
   content: {
     backgroundColor: '#d5d5db',
-    marginTop: 70,
+    marginTop: 60,
   },
   swiper: {
     height: 160,
@@ -223,5 +214,9 @@ const styles = StyleSheet.create({
     height: null,
     width: null,
     resizeMode: 'stretch',
+  },
+  cardHeader: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#dee0e2',
   }
 });

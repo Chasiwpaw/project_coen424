@@ -103,21 +103,26 @@ export const listRestaurants = async(position, radius, limit) => {
   })
   .then((response) => response.json())
   .then(async (responseJson) => {
-    console.log('Does it get here?')
-    // console.log(responseJson)
     return responseJson;
-    // if(responseJson.success !== null) {
-    //   try {
-    //     console.log('this is called')
-    //     return responseJson;
-    //   } catch (error) {
-    //     // Error saving data
-    //     console.log(error);
-    //     return false;
-    //   }
-    // } else {
-    //   return false;
-    // }
+  })
+  .catch((error) => {
+    console.error(error);
+    return false;
+  })
+}
+
+export const recommendRestaurants = async() => {
+  fetch('http://35.182.248.84/api/recommend', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': await AsyncStorage.getItem('token'),
+    },
+  })
+  .then((response) => response.json())
+  .then(async (responseJson) => {
+    console.log(responseJson);
+    return responseJson;
   })
   .catch((error) => {
     console.error(error);
