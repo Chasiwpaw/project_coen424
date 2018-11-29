@@ -13,6 +13,7 @@ export const authLogin = async (username, password, state) => {
       if(responseJson.success !== null) {
         try {
           await AsyncStorage.setItem('token', 'Bearer ' + responseJson.success.token);
+          await AsyncStorage.setItem('user_id', '' + responseJson.success.user_id);
           state.navigate('HomeScreen');
           return true;
         } catch (error) {

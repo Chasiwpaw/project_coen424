@@ -31,6 +31,7 @@ export default class Home extends Component {
     this.user_channel = null;
     this.populateRestaurants = this.populateRestaurants.bind(this);
     this.listRestaurants = this.listRestaurants.bind(this);
+    this.dispatchRecommendSystem = this.dispatchRecommendSystem.bind(this);
     this.searchSubmit = this.searchSubmit.bind(this);
   }
 
@@ -46,6 +47,7 @@ export default class Home extends Component {
     })
     .then((response) => response.json())
     .then(async (responseJson) => {
+      // console.log(responseJson)
       return this.setState({
         restos: responseJson.businesses,
         temp_restos: responseJson.businesses,
@@ -82,6 +84,27 @@ export default class Home extends Component {
     })
   }
 
+  dispatchRecommendSystem = async(position) => {
+    const { latitude, longitude } = position.coords;
+    const id = await AsyncStorage.getItem('user_id');
+    fetch(`http://35.182.248.84/api/places?latitude=${latitude}&longitude=${longitude}&user_id=${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': await AsyncStorage.getItem('token'),
+      },
+    })
+    .then((response) => response.json())
+    .then(async (responseJson) => {
+      console.log(responseJson);
+      return responseJson;
+    })
+    .catch((error) => {
+      console.error(error);
+      return false;
+    })
+  }
+
   componentDidMount() {
     this.pusher = new Pusher('0804ef5e4cd344d9d174', {
       cluster: 'us2',
@@ -103,6 +126,7 @@ export default class Home extends Component {
     });
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        this.dispatchRecommendSystem(position);
         this.listRestaurants(position);
       },
       (error) => this.setState({ error: error.message }),
@@ -143,7 +167,7 @@ export default class Home extends Component {
           </Left>
           <Body>
             <Title style={styles.fontSize}>
-              FeedMeFinder!
+              Let's Eat!
             </Title>
           </Body>
           <Right>

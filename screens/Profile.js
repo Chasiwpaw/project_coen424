@@ -16,24 +16,25 @@ export default class Register extends Component {
   }
 
   getProfile = async() => {
-    fetch('http://35.182.248.84/api/me', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': await AsyncStorage.getItem('token'),
-      },
-    })
-    .then((response) => response.json())
-    .then(async (responseJson) => {
-      console.log(responseJson)
-      return this.setState({
-        profile: responseJson,
-      });
-    })
-    .catch((error) => {
-      console.error(error);
-      return false;
-    })
+    // fetch('http://35.182.248.84/api/me', {
+    //   method: 'GET',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //     'Authorization': await AsyncStorage.getItem('token'),
+    //   },
+    // })
+    // .then((response) => response.json())
+    // .then(async (responseJson) => {
+    //   console.log(responseJson)
+    //   return this.setState({
+    //     profile: responseJson,
+    //   });
+    // })
+    // .catch((error) => {
+    //   console.error(error);
+    //   return false;
+    // })
+    return true;
   }
 
   componentDidMount() {
