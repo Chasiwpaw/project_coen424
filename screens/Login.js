@@ -2,11 +2,20 @@ import React, {Component} from 'react';
 import { StyleSheet, View, Image, Text, KeyboardAvoidingView } from 'react-native';
 import LoginForm from './LoginForm';
 import { authLogin } from '../api/index';
+import Pusher from 'pusher-js/react-native';
 
 export default class Login extends Component {
+  constructor(props) {
+    super(props);
+    this.pusher = null;
+  }
+
+  componentDidMount() {
+    Pusher.logToConsole = true;
+  }
 
   handleLoginNav = (username, password) => {
-    authLogin(username, password, this.props.navigation);
+    authLogin(username, password, this.props.navigation, this.pusher);
   }
 
   handleRegisterNav = () => {

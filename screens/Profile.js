@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, TextInput, TouchableOpacity, Text, StatusBar } from 'react-native';
-import { register } from '../api';
+import { StyleSheet, View, TextInput, TouchableOpacity, Text, StatusBar, AsyncStorage } from 'react-native';
 
 export default class Register extends Component {
   constructor(props) {
@@ -9,9 +8,36 @@ export default class Register extends Component {
       name:'',
       email:'',
       password: '',
-      c_password: ''
+      c_password: '',
+      profile: null,
     }
     this.handleRegister = this.handleRegister.bind(this);
+    this.getProfile = this.getProfile.bind(this);
+  }
+
+  getProfile = async() => {
+    fetch('http://35.182.248.84/api/me', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': await AsyncStorage.getItem('token'),
+      },
+    })
+    .then((response) => response.json())
+    .then(async (responseJson) => {
+      console.log(responseJson)
+      return this.setState({
+        profile: responseJson,
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      return false;
+    })
+  }
+
+  componentDidMount() {
+    this.getProfile();
   }
 
   handleRegister() {
@@ -76,7 +102,7 @@ export default class Register extends Component {
 
         <View style={styles.flexgroup}>
           <TouchableOpacity onPress={ this.handleRegister } style={styles.buttonContainer}>
-            <Text> REGISTER </Text>
+            <Text> UPDATE </Text>
           </TouchableOpacity>
         </View>
       </View>

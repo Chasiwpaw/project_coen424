@@ -2,6 +2,8 @@ import { createStackNavigator, createDrawerNavigator } from 'react-navigation';
 import Login from '../screens/Login';
 import Register from '../screens/Register';
 import Home from '../screens/Home';
+import Profile from '../screens/Profile';
+import CustomDrawerContentComponent from '../components/CustomDrawerContentComponent';
 
 const LoginScreen = createStackNavigator({
   LoginScreen: { 
@@ -17,20 +19,26 @@ const LoginScreen = createStackNavigator({
       headerTransparent: true,
     },
   },
+  ProfileScreen: {
+    screen: Profile,
+    navigationOptions: {
+      title: 'Profile Form',
+      headerTransparent: true,
+    }
+  },
   HomeScreen: {
     screen: createDrawerNavigator({
       Home :{
         screen: Home,
       },
-      Profile: {
-        screen: Home,
-      },
-      Logout: {
-        screen: Login,
-      }
     }, {
+      drawerPosition: 'left',
+      contentComponent: CustomDrawerContentComponent,
+      drawerOpenRoute: 'DrawerOpen',
+      drawerCloseRoute: 'DrawerClose',
+      drawerToggleRoute: 'DrawerToggle',
       disableGestures: true,
-      drawerLockMode: 'locked-closed'
+      drawerLockMode: 'locked-closed',
     }),
     navigationOptions: {
       header: null,

@@ -30,7 +30,7 @@ export const authLogin = async (username, password, state) => {
     });
 }
 
-export const register = async(name, email, password, c_password, state) => {
+export const register = async(name, email, password, c_password, state, pusher) => {
   fetch(`http://35.182.248.84/api/register?name=${name}&email=${email}&password=${password}&c_password=${c_password}`, {
     method: 'POST',
     headers: {
@@ -39,10 +39,10 @@ export const register = async(name, email, password, c_password, state) => {
   })
   .then((response) => response.json())
   .then(async (responseJson) => {
-    console.log('Im here')
     if(responseJson.success !== null) {
       try {
         await AsyncStorage.setItem('token', 'Bearer ' + responseJson.success.token);
+        state.setParams({pusher})
         state.navigate('HomeScreen');
         return true;
       } catch (error) {
@@ -114,6 +114,27 @@ export const listRestaurants = async(position, radius, limit) => {
 export const recommendRestaurants = async() => {
   fetch('http://35.182.248.84/api/recommend', {
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': await AsyncStorage.getItem('token'),
+    },
+  })
+  .then((response) => response.json())
+  .then(async (responseJson) => {
+    console.log(responseJson);
+    return responseJson;
+  })
+  .catch((error) => {
+    console.error(error);
+    return false;
+  })
+}
+
+export const updateReview = async(id, star, comment) => {
+  const no_comment = 'No Comment';
+  const commentText = comment !== '' ? `&text=${comment}` : `&text=${no_comment}`;
+  fetch(`http://35.182.248.84/api/review?business_id=${id}&stars=${star}${commentText}`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': await AsyncStorage.getItem('token'),
